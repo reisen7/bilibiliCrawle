@@ -1,0 +1,5 @@
+requests~=2.32.3
+google~=3.0.0
+pytz~=2024.2
+selenium~=4.27.1
+urllib3~=2.2.3

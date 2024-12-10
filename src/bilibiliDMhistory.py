@@ -4,9 +4,9 @@ from urllib.parse import urlparse
 from urllib.parse import urlparse, parse_qs
 import requests
 import google.protobuf.text_format as text_format
-import dm_pb2 as Danmaku
+from proto import dm_pb2 as Danmaku
 import datetime
-import oid
+from utils import oid
 
 bv = oid.getBv()
 

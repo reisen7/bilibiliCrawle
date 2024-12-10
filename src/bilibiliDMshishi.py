@@ -1,7 +1,8 @@
 import requests
 import google.protobuf.text_format as text_format
-import dm_pb2 as Danmaku
-import oid
+from proto import dm_pb2 as Danmaku
+from utils import oid
+
 url = 'https://api.bilibili.com/x/v2/dm/web/seg.so'
 oid = oid.getOid()
 params = {

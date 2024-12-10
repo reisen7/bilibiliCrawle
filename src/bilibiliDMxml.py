@@ -1,5 +1,5 @@
 import requests
-import oid
+from utils import oid
 import xml.etree.ElementTree as ET
 
 # 定义请求的URL
