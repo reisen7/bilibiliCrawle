@@ -1,10 +1,9 @@
 import requests
-import google.protobuf.text_format as text_format
 from proto import dm_pb2 as Danmaku
-from utils import oid
+from src.configs import config
 
 url = 'https://api.bilibili.com/x/v2/dm/web/seg.so'
-oid = oid.getOid()
+oid = config.getOid()
 params = {
     'type': 1,         # 弹幕类型
     'oid': oid,    # cid

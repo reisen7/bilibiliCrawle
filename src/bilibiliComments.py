@@ -14,13 +14,7 @@ import os
 from fake_useragent import UserAgent
 import random
 
-def create_file_if_not_exists(file_path):
-    file_dir = os.path.dirname(file_path)
-    if not os.path.exists(file_dir):
-        os.makedirs(file_dir)
-    if not os.path.exists(file_path):
-        with open(file_path, 'w', encoding='utf-8') as f:
-            pass  # 这里只是创建空文件，若需要写入初始内容可在这里添加对应代码
+from src.configs import config
 
 options = {
     'ignore_http_methods': ['GET', 'POST'],  # 提取XHR请求，通常为GET或POST。如果你不希望忽略任何方法，可以忽略此选项或设置为空数组
@@ -28,6 +22,8 @@ options = {
         'X-Requested-With': 'XMLHttpRequest'  # 筛选XHR请求
     }
 }
+
+bv = config.getBv()
 
 # 配置Selenium
 # chrome_options = Options()
@@ -62,8 +58,8 @@ options = {
 # 初始化一个变量，用来保存最后一个符合条件的请求
 last_request = 'https://api.bilibili.com/x/v2/reply/wbi/main?oid=113593563548072&type=1&mode=3&pagination_str=%7B%22offset%22:%22%7B%5C%22type%5C%22:1,%5C%22direction%5C%22:1,%5C%22session_id%5C%22:%5C%221775241779703781%5C%22,%5C%22data%5C%22:%7B%7D%7D%22%7D&plat=1&web_location=1315875&w_rid=75bcdc9f95c1e8c7355b45f7a605ed8a&wts=1733636119'
 
-oid = '113593563548072'
-all_cookies = 'buvid4=023081809-k0zyHiuRDURA%2F%2Bu6uUGBn9ZJh%2BUZroYQRlqvXttbKIFoVgjlvvDstw%3D%3D; buvid_fp_plain=undefined; header_theme_version=CLOSE; enable_web_push=DISABLE; DedeUserID=14211643; DedeUserID__ckMd5=896bac34e98270e4; LIVE_BUVID=AUTO7217028158647895; FEED_LIVE_VERSION=V8; buvid3=EBCD19BB-5F43-FA27-9E08-E7841D11831F72726infoc; b_nut=1723861672; _uuid=1B2A10745-10D82-3D25-B7E8-710B373AF513573813infoc; rpdid=0zbfvZWQjU|16Z4lxZ7a|2E|3w1SVjVJ; fingerprint=21dae7af1181bd34188ec789e2d7d75c; CURRENT_QUALITY=0; buvid_fp=21dae7af1181bd34188ec789e2d7d75c; PVID=3; home_feed_column=5; hit-dyn-v2=1; dy_spec_agreed=1; bili_ticket=eyJhbGciOiJIUzI1NiIsImtpZCI6InMwMyIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzM4ODU5MTQsImlhdCI6MTczMzYyNjY1NCwicGx0IjotMX0.-TpHS1oQ29EYzWSf_slAT-jsYaBoZB3M_637TFrFLcI; bili_ticket_expires=1733885854; SESSDATA=1034f759%2C1749178715%2Ca2aad%2Ac1CjB-1L_IiUZkYXemBlhQoVB5lrjEGQv0N_RgiZ_DLplQ4Lt9XzBhzFWep3Rk6gCqGQwSVlV0YVFPbXgzUXNhT1dldWhGRVpPMU5jaDhzTVdDQ1QyLU56NDNIcnNnUVFOQ3VTQm1Xc1I3QlZwa2hlSzBIRTJtMC1SLXZRa3JlbmxDSV9oYXJvSTRRIIEC; bili_jct=b49d9fcd88fc86b822f7c9d4125530a3; sid=4k53eg99; bp_t_offset_14211643=1008410247531855872; b_lsid=FF812264_193A475A5F8; bsource=search_bing; browser_resolution=1912-954; CURRENT_FNVAL=4048'
+oid = config.getOid()
+all_cookies = config.getCookie()
 # cookie_pairs = [pair.split('=') for pair in all_cookies.split('; ')]
 # # 将分割后的结果转换为字典形式的列表（每个元素是一个字典）
 # cookie_pairs = [{"name": pair[0].strip(), "value": pair[1].strip()} for pair in cookie_pairs]
@@ -89,8 +85,8 @@ if last_request:
     # 从URL中提取oid
     parsed_url = urlparse(last_request)
     query_params = parse_qs(parsed_url.query)
-    oid = query_params.get("oid", [None])[0]
-    type = query_params.get("type", [None])[0]
+    oid = config.getOid()
+    type = '1'
     print("OID:", oid)
     print("type:", type)
 
@@ -115,11 +111,11 @@ MAX_RETRIES = 5
 # 重试间隔（秒）
 RETRY_INTERVAL = 10
 
-file_path_1 = 'comments/主评论.csv'
+file_path_1 = 'comments/评论_'+bv+'.csv'
 
 
 
-create_file_if_not_exists(file_path_1)
+config.create_file_if_not_exists(file_path_1)
 
 beijing_tz = pytz.timezone('Asia/Shanghai')  # 时间戳转换为北京时间
 ua = UserAgent()  # 创立随机请求头
