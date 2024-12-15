@@ -14,7 +14,7 @@ import os
 from fake_useragent import UserAgent
 import random
 
-from src.configs import config
+from configs.config import config
 
 options = {
     'ignore_http_methods': ['GET', 'POST'],  # 提取XHR请求，通常为GET或POST。如果你不希望忽略任何方法，可以忽略此选项或设置为空数组
@@ -111,11 +111,14 @@ MAX_RETRIES = 5
 # 重试间隔（秒）
 RETRY_INTERVAL = 10
 
-file_path_1 = 'comments/评论_'+bv+'.csv'
+file_path_1 = 'doc/comments/评论_'+bv+'.csv'
+file_path_2 = 'doc/user/user_ids.txt'
 
-
+config.create_file_if_not_exists(file_path_2)
 
 config.create_file_if_not_exists(file_path_1)
+
+users = [] # 用户
 
 beijing_tz = pytz.timezone('Asia/Shanghai')  # 时间戳转换为北京时间
 ua = UserAgent()  # 创立随机请求头
@@ -198,6 +201,7 @@ with requests.Session() as session:
                             # 将提取的信息追加到列表中
                             current_level = comment['member']['level_info']['current_level']
                             mid = str(comment['member']['mid'])
+                            users.append(mid)
                             all_comments.append(
                                 [name, sex, formatted_time, like, message, location, count, '', current_level, mid, rpid])
                             comments_current.append(
@@ -287,3 +291,8 @@ with requests.Session() as session:
                 else:
                     raise  # 如果达到最大重试次数，则抛出原始异常
 
+
+# 将所有用户数据写入CSV文件
+with open(file_path_2, mode='a', newline='', encoding='utf-8-sig') as file:
+    writer = csv.writer(file)
+    writer.writerows(users)

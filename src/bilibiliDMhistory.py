@@ -53,7 +53,8 @@ dms = []
 
 csv_header = ['id', '弹幕发送时间（ms）', '弹幕类型', '弹幕字号', '弹幕颜色', '发送者mid', '弹幕内容', '发送时间',
               '弹幕 dmid', '弹幕属性位']
-file_path_1 = ('dm/历史弹幕_' + bv + '.csv')
+file_path_1 = ('doc/dm/历史弹幕_' + bv + '.csv')
+
 config.create_file_if_not_exists(file_path_1)
 
 for monthDay in monthDays:

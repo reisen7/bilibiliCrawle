@@ -5,28 +5,48 @@
 
 这个项目是一个爬虫应用，旨在从B站提取弹幕数据，评论数据。通过使用Python编程语言及其相关库（如 `requests`, `BeautifulSoup`, `Scrapy` 等），我们能够实现高效、可靠的数据抓取和处理。
 
+参考项目如下：
+- [哔哩哔哩-API收集整理](https://github.com/SocialSisterYi/bilibili-API-collect)：这是一个功能很强大的集合项目，我们的主要接口参考了它的思路。
+- [Bilibili/B站视频/动态评论爬虫](https://blog.csdn.net/weixin_51869009/article/details/139638650)：我们参考其中的爬虫思路。
+- 
 ## 项目结构
 
 ```
-project-root/
-│
-├── src/
-│   ├── bilibilComments.py              # 评论爬虫
-│   ├── bilibiliDMhistory.py            # 历史弹幕爬虫
-│   ├── bilibiliDMshishi.py            # 实时弹幕爬虫
-│   └── bilibiliDMxml.py             # xml弹幕
-│
-├── comments/
-│   └── raw/                 # 爬取的评论数据
-│
-├── tests/
-│   ├── __init__.py
-│   └── test_spider.py       # 爬虫测试代码
-│
-├── requirements.txt         # 项目依赖包
-├── .gitignore               # Git忽略文件
-└── README.md                # 项目说明文档
-
+bilibili                                
+├─ chromedriver-win64                     //浏览器驱动        
+│  ├─ chromedriver.exe                  
+│  ├─ LICENSE.chromedriver              
+│  └─ THIRD_PARTY_NOTICES.chromedriver  
+├─ chromedriver_win32                   
+│  ├─ chromedriver.exe                  
+│  └─ LICENSE.chromedriver                
+├─ proto                                  //生成的编译文件
+│  ├─ __pycache__                       
+│  │  └─ dm_pb2.cpython-39.pyc          
+│  ├─ dm.proto                          
+│  └─ dm_pb2.py                         
+├─ src                                    //项目文件
+│  ├─ configs                             //biliibli配置文件
+│  │  ├─ __pycache__                    
+│  │  │  └─ config.cpython-39.pyc       
+│  │  └─ config.py                      
+│  ├─ doc                                 //爬到的数据
+│  │  ├─ comments                       
+│  │  │  └─ 评论_BV1jNmtYcEbY.csv         
+│  │  └─ dm                             
+│  │     ├─ 历史弹幕_BV14UUAYmExC.csv       
+│  │     └─ 历史弹幕_BV1jNmtYcEbY.csv       
+│  ├─ bilibiliComments.py                 //评论爬虫
+│  ├─ bilibiliDMhistory.py                //历史弹幕爬虫
+│  ├─ bilibiliDMshishi.py                 //实时弹幕爬虫
+│  └─ bilibiliDMxml.py                    //xml弹幕爬虫
+├─ tests                                
+│  └─ test_spider.py                    
+├─ __pycache__                          
+├─ LICENSE                              
+├─ README.md                            
+└─ requirements.txt                     
+                
 ```
 
 ## 依赖项
@@ -87,10 +107,9 @@ urllib3~=2.2.3
 
 如果你有任何问题或建议，可以通过以下方式联系我们：
 
-- 项目主页： [项目主页链接]
-- GitHub Issues： [GitHub Issues链接]
-- 电子邮件： [你的邮箱]
+- 项目主页： [项目主页链接](https://gitee.com/reisen7/bilibili-crawler)
+- Git Issues： [Issues](https://gitee.com/reisen7/bilibili-crawler/issues)
+- 电子邮件： [邮箱](mailto:328170849@qq.com)
 
 ---
 
-请根据实际情况调整上述模板内容，确保它符合你的项目需求和结构。祝你的爬虫项目顺利！
