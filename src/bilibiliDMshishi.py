@@ -1,9 +1,9 @@
 import requests
 from proto import dm_pb2 as Danmaku
-from src.configs import config
+from configs import config
 
 url = 'https://api.bilibili.com/x/v2/dm/web/seg.so'
-oid = config.getOid()
+oid = config.BilibiliHelper.get_oid
 params = {
     'type': 1,         # 弹幕类型
     'oid': oid,    # cid
@@ -16,7 +16,7 @@ headers = {
 resp = requests.get(url, params,headers=headers)
 data = resp.content
 
-danmaku_seg = Danmaku.DmSegMobileReply()
+danmaku_seg = Danmaku.DmSegMobileReply() # type: ignore
 print(danmaku_seg)
 
 danmaku_seg.ParseFromString(data)

@@ -1,18 +1,25 @@
+'''
+Author: reisen
+Date: 2024-12-08 15:51:33
+LastEditTime: 2024-12-15 16:14:23
+'''
 import csv
 import json
 import time
 import requests
 import datetime
-from src.configs import config
+import configs.config as config
 import google.protobuf.text_format as text_format
-import proto.dm_pb2 as Danmaku
+from proto import dm_pb2 as Danmaku
+from configs.config import BilibiliHelper
 
-bv = config.getBv()
 
-headers = config.getHeaders()
+bv = BilibiliHelper.get_bv()
+
+headers = BilibiliHelper.get_headers()
 
 # 从URL中提取oid
-oid = config.getOid()
+oid = config.BilibiliHelper.get_oid()
 type = 1
 print("OID:", oid)
 print("type:", type)
@@ -32,7 +39,7 @@ current_timestamp = int(time.time())
 months_between = config.get_months_between(data['pubdate'], current_timestamp)
 print(months_between)
 
-cid = config.getCid()
+cid = config.BilibiliHelper.get_cid()
 
 monthDays = []
 
@@ -44,6 +51,7 @@ for months in months_between:
     }
     history_date_url = 'https://api.bilibili.com/x/v2/dm/history/index'
     resp = requests.get(history_date_url, params, headers=headers)
+    print(resp.text)
     data = json.loads(resp.text)
     monthDays += data['data']
 
@@ -65,10 +73,10 @@ for monthDay in monthDays:
         , 'date': monthDay  # 弹幕日期
         , 'segment_index': 2
     }
-    resp = requests.get(history_dm_url, params, headers=config.getHeaders())
+    resp = requests.get(history_dm_url, params, headers=BilibiliHelper.get_headers())
     data = resp.content
 
-    danmaku_seg = Danmaku.DmSegMobileReply()
+    danmaku_seg = Danmaku.DmSegMobileReply() # type: ignore
     danmaku_seg.ParseFromString(data)
     # print(text_format.MessageToString(danmaku_seg.elems[0], as_utf8=True))
     print(len(danmaku_seg.elems))

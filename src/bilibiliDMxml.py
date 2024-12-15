@@ -1,5 +1,5 @@
 import requests
-from src.configs import config
+from configs import BilibiliHelper
 import xml.etree.ElementTree as ET
 
 # 定义请求的URL
@@ -8,9 +8,9 @@ url = "https://api.bilibili.com/x/v1/dm/list.so"
 url = "https://api.bilibili.com/x/v2/dm/wbi/web/seg.so"
 
 
-oid = config.getOid()
+oid = BilibiliHelper.getOid()
 
-cookie = config.getCookie()
+cookie = BilibiliHelper.getCookie()
 
 print(oid)
 

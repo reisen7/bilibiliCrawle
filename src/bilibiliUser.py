@@ -1,7 +1,7 @@
 '''
 Author: reisen
 Date: 2024-12-14 23:29:53
-LastEditTime: 2024-12-15 03:58:38
+LastEditTime: 2024-12-15 16:31:45
 '''
 import os,sys
 import csv
@@ -27,7 +27,7 @@ from selenium.common.exceptions import TimeoutException
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 import random
-
+from configs.config import BilibiliHelper
 ua = UserAgent()
 
 img_key, sub_key = wbi.getWbiKeys()
@@ -75,8 +75,8 @@ signed_params = wbi.encWbi(
 
 # 将用户ID保存到名为user_ids.txt的文件中，每行一个。
 # 运行此脚本后，您将在名为output.xlsx的Excel文件中看到提取的数据。
-
-file_path_1 = ('doc/user/用户.csv')
+bv = BilibiliHelper.get_bv()
+file_path_1 = ('doc/user/用户_'+bv+'.csv')
 
 config.create_file_if_not_exists(file_path_1)
 

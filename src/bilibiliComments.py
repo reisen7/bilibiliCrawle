@@ -13,8 +13,8 @@ import datetime
 import os
 from fake_useragent import UserAgent
 import random
-
-from configs.config import config
+import tkinter as tk
+import configs.config as config
 
 options = {
     'ignore_http_methods': ['GET', 'POST'],  # 提取XHR请求，通常为GET或POST。如果你不希望忽略任何方法，可以忽略此选项或设置为空数组
@@ -23,7 +23,7 @@ options = {
     }
 }
 
-bv = config.getBv()
+bv = config.BilibiliHelper.get_bv()
 
 # 配置Selenium
 # chrome_options = Options()
@@ -58,8 +58,8 @@ bv = config.getBv()
 # 初始化一个变量，用来保存最后一个符合条件的请求
 last_request = 'https://api.bilibili.com/x/v2/reply/wbi/main?oid=113593563548072&type=1&mode=3&pagination_str=%7B%22offset%22:%22%7B%5C%22type%5C%22:1,%5C%22direction%5C%22:1,%5C%22session_id%5C%22:%5C%221775241779703781%5C%22,%5C%22data%5C%22:%7B%7D%7D%22%7D&plat=1&web_location=1315875&w_rid=75bcdc9f95c1e8c7355b45f7a605ed8a&wts=1733636119'
 
-oid = config.getOid()
-all_cookies = config.getCookie()
+oid = config.BilibiliHelper.get_oid()
+all_cookies = config.BilibiliHelper.get_cookie()
 # cookie_pairs = [pair.split('=') for pair in all_cookies.split('; ')]
 # # 将分割后的结果转换为字典形式的列表（每个元素是一个字典）
 # cookie_pairs = [{"name": pair[0].strip(), "value": pair[1].strip()} for pair in cookie_pairs]
@@ -80,18 +80,23 @@ all_cookies = config.getCookie()
 #         last_request = request
 
 # 检查是否找到了符合条件的请求
+
+cookies_str = ''
+sessdata= ''
+bili_jct=''
+
 if last_request:
     print("URL:", last_request)
     # 从URL中提取oid
     parsed_url = urlparse(last_request)
     query_params = parse_qs(parsed_url.query)
-    oid = config.getOid()
+    oid = config.BilibiliHelper.get_oid()
     type = '1'
     print("OID:", oid)
     print("type:", type)
 
     # cookies
-    cookie_pairs = [pair.split('=') for pair in all_cookies.split('; ')]
+    cookie_pairs = [pair.split('=') for pair in str(all_cookies).split('; ')]
     # 将分割后的结果转换为字典形式的列表（每个元素是一个字典）
     cookie_pairs = [{"name": pair[0].strip(), "value": pair[1].strip()} for pair in cookie_pairs]
     cookies_dict = {cookie['name']: cookie['value'] for cookie in cookie_pairs}
@@ -114,9 +119,10 @@ RETRY_INTERVAL = 10
 file_path_1 = 'doc/comments/评论_'+bv+'.csv'
 file_path_2 = 'doc/user/user_ids.txt'
 
+config.create_file_if_not_exists(file_path_1)
+
 config.create_file_if_not_exists(file_path_2)
 
-config.create_file_if_not_exists(file_path_1)
 
 users = [] # 用户
 
@@ -295,4 +301,5 @@ with requests.Session() as session:
 # 将所有用户数据写入CSV文件
 with open(file_path_2, mode='a', newline='', encoding='utf-8-sig') as file:
     writer = csv.writer(file)
-    writer.writerows(users)
+    for val in users:
+        file.write(val+"\n")
