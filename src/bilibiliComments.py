@@ -236,7 +236,7 @@ with requests.Session() as session:
                                     response = session.get(url_reply, params=data_2, headers=headers, proxies=proxies)
                                     prep = session.prepare_request(
                                         requests.Request('GET', url_reply, params=data_2, headers=headers))
-                                    print(prep.url)
+                                    # print(prep.url)
 
                                     if response.status_code == 200:
                                         json_data = response.json()  # 获得json数据

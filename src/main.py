@@ -13,11 +13,40 @@ class StdoutRedirector:
     def __init__(self, text_widget):
         self.text_widget = text_widget
 
-    def write(self, s):
-        self.text_widget.configure(state=tk.NORMAL)
-        self.text_widget.insert(tk.END, s)
-        self.text_widget.configure(state=tk.DISABLED)
-        self.text_widget.see(tk.END)  # 自动滚动到文本框末尾，确保能看到最新内容
+    # def write(self, s):
+    #     self.text_widget.configure(state=tk.NORMAL)
+    #     self.text_widget.insert(tk.END, s)
+    #     self.text_widget.configure(state=tk.DISABLED)
+    #     self.text_widget.see(tk.END)  # 自动滚动到文本框末尾，确保能看到最新内容
+
+    def write(self, output: str):
+        if output.startswith('\r'):
+            # 去除前缀 '/r'
+            output = output[2:]
+
+            # 删除最后一行内容
+            if self.last_line_start != 0:
+                self.text_widget.delete(f"{self.last_line_start}.0", tk.END)
+
+            # 插入新内容
+            self.text_widget.insert(tk.END, output)
+
+            # 更新最后一行的起始位置
+            self.last_line_start = int(self.text_widget.index('end-1c').split('.')[0])
+        else:
+            # 正常写入
+            self.text_widget.insert(tk.END, output)
+            if output.endswith('\n'):
+                self.last_line_start = int(self.text_widget.index('end-1c').split('.')[0]) + 1
+            else:
+                self.last_line_start = int(self.text_widget.index('end-1c').split('.')[0])
+
+        # 滚动到文本组件的末尾
+        self.text_widget.see(tk.END)
+
+    def flush(self):
+        # 如果有flush方法的话，确保与sys.stdout接口一致
+        pass
 
 
 # 调用外部爬虫文件中的对应函数来执行爬虫任务（异步执行）
@@ -61,6 +90,7 @@ def run_spider_3():
             log_text.delete(1.0, tk.END)
             sys.stdout = StdoutRedirector(log_text)
             spider_module = importlib.import_module('bilibiliUser')
+            result = spider_module.main()  
             print("爬取完成")
             path = current_path + "\\doc\\user\\用户_" + BilibiliHelper.get_bv() + ".csv"
             log_text.insert(tk.END, f"用户信息爬取执行完毕，文件地址: {path}\n")

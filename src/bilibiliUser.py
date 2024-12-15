@@ -1,7 +1,7 @@
 '''
 Author: reisen
 Date: 2024-12-14 23:29:53
-LastEditTime: 2024-12-15 16:31:45
+LastEditTime: 2024-12-15 20:29:50
 '''
 import os,sys
 import csv
@@ -125,11 +125,14 @@ def get_user_data(driver, user_id):
 def main():
     num_count = 0
     # 从 txt 文件读取用户ID
-    with open('doc/user/user_ids.txt', 'r') as f:
+    with open('doc/user/user_ids.txt', 'r',encoding='utf-8-sig', errors='replace') as f:
         user_ids = [line.strip() for line in f.readlines()]
-
+    
+    # print(user_ids)
+    
+    
     # 检查 output.xlsx 是否存在，创建或加载工作表
-    with open(file_path_1, mode='a', newline='', encoding='utf-8-sig') as file:
+    with open(file_path_1, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['ID', '昵称', '个人简介', '关注数', '粉丝数', '获赞数', '播放数', '阅读数', '视频投稿数'])
 

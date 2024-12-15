@@ -1,7 +1,7 @@
 '''
 Author: reisen
 Date: 2024-12-08 15:51:33
-LastEditTime: 2024-12-15 16:14:23
+LastEditTime: 2024-12-15 20:02:55
 '''
 import csv
 import json
@@ -25,8 +25,8 @@ print("OID:", oid)
 print("type:", type)
 
 
-
-
+timeflush = 5   #设置屏幕刷新的间隔时间
+bar_length = 20  # 进度条长度设为10
 
 # 查询稿件发布时间
 video_url = 'https://api.bilibili.com/x/web-interface/wbi/view'
@@ -65,6 +65,8 @@ file_path_1 = ('doc/dm/历史弹幕_' + bv + '.csv')
 
 config.create_file_if_not_exists(file_path_1)
 
+num1 = len(monthDays)
+j = 0 
 for monthDay in monthDays:
     history_dm_url = 'https://api.bilibili.com/x/v2/dm/web/history/seg.so'
     params = {
@@ -79,7 +81,12 @@ for monthDay in monthDays:
     danmaku_seg = Danmaku.DmSegMobileReply() # type: ignore
     danmaku_seg.ParseFromString(data)
     # print(text_format.MessageToString(danmaku_seg.elems[0], as_utf8=True))
-    print(len(danmaku_seg.elems))
+    # print("完成"+monthDay+"的数据爬取")
+    j += 1
+    progress_percent = int(j / num1 * 100)
+    filled_length = int(bar_length * (progress_percent / 100))
+    num = len(danmaku_seg.elems)         #设置倒计时时间
+    i = 0
     for elems in danmaku_seg.elems:
         dm = text_format.MessageToString(elems, as_utf8=True).replace("\"", "").split("\n")
 
@@ -102,7 +109,13 @@ for monthDay in monthDays:
         ctime = formatted_time
         idStr = json_obj['idStr']
         attr = json_obj['attr']
-        print(json_obj)
+        # for i in range(0, int(num/timeflush)+1):
+        i += 1
+        if i % timeflush == 0 or i == num:
+           progress_percent1 = int(i / num * 100)
+           filled_length1 = int(bar_length * (progress_percent1 / 100))
+           print("\r正在爬取月份:" + "|" + "-" * filled_length + " "*(bar_length - filled_length)+"|" + str(round(j/num1 * 100))+"%                        正在爬"+monthDay+"时间的弹幕:" + "|" + "-" * filled_length1 + " "*(bar_length - filled_length1)+"|" + str(round(i/num * 100))+"%", end="",flush=True)
+
         dms.append(
             [id,progress,mode,fontsize,color,midHash,content,ctime,idStr,attr]
         )

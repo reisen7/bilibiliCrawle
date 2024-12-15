@@ -12,41 +12,61 @@
 ## 项目结构
 
 ```
-bilibili                                
-├─ chromedriver-win64                     //浏览器驱动        
-│  ├─ chromedriver.exe                  
-│  ├─ LICENSE.chromedriver              
-│  └─ THIRD_PARTY_NOTICES.chromedriver  
-├─ chromedriver_win32                   
-│  ├─ chromedriver.exe                  
-│  └─ LICENSE.chromedriver                
-├─ proto                                  //生成的编译文件
-│  ├─ __pycache__                       
-│  │  └─ dm_pb2.cpython-39.pyc          
-│  ├─ dm.proto                          
-│  └─ dm_pb2.py                         
-├─ src                                    //项目文件
-│  ├─ configs                             //biliibli配置文件
-│  │  ├─ __pycache__                    
-│  │  │  └─ config.cpython-39.pyc       
-│  │  └─ config.py                      
-│  ├─ doc                                 //爬到的数据
-│  │  ├─ comments                       
-│  │  │  └─ 评论_BV1jNmtYcEbY.csv         
-│  │  └─ dm                             
-│  │     ├─ 历史弹幕_BV14UUAYmExC.csv       
-│  │     └─ 历史弹幕_BV1jNmtYcEbY.csv       
-│  ├─ bilibiliComments.py                 //评论爬虫
-│  ├─ bilibiliDMhistory.py                //历史弹幕爬虫
-│  ├─ bilibiliDMshishi.py                 //实时弹幕爬虫
-│  └─ bilibiliDMxml.py                    //xml弹幕爬虫
-├─ tests                                
-│  └─ test_spider.py                    
-├─ __pycache__                          
-├─ LICENSE                              
-├─ README.md                            
-└─ requirements.txt                     
-                
+bilibili                                   
+├─ chromedriver-win64                       //浏览器驱动
+│  ├─ chromedriver.exe                     
+│  ├─ LICENSE.chromedriver                 
+│  └─ THIRD_PARTY_NOTICES.chromedriver     
+├─ chromedriver_win32                      
+│  ├─ chromedriver.exe                     
+│  └─ LICENSE.chromedriver                 
+├─ src                                     
+│  ├─ configs                               //配置
+│  │  ├─ __pycache__                       
+│  │  │  ├─ biliwbi.cpython-39.pyc         
+│  │  │  └─ config.cpython-39.pyc          
+│  │  ├─ biliwbi.py                        
+│  │  └─ config.py                         
+│  ├─ doc                                   //文件
+│  │  ├─ comments                          
+│  │  │  ├─ 评论_BV1jNmtYcEbY.csv            
+│  │  │  └─ 评论_BV1TsmtY7Egu.csv            
+│  │  ├─ dm                                
+│  │  │  ├─ 历史弹幕_BV14UUAYmExC.csv          
+│  │  │  ├─ 历史弹幕_BV1jNmtYcEbY.csv          
+│  │  │  └─ 历史弹幕_BV1TsmtY7Egu.csv          
+│  │  ├─ user                              
+│  │  │  ├─ user_ids.txt                   
+│  │  │  ├─ 用户.csv                         
+│  │  │  └─ 用户_BV1jNmtYcEbY.csv            
+│  │  └─ video                             
+│  │     ├─ 视频信息_BV1jNmtYcEbY.csv          
+│  │     └─ 视频信息_BV1TsmtY7Egu.csv          
+│  ├─ proto                                 //弹幕转译
+│  │  ├─ __pycache__                       
+│  │  │  └─ dm_pb2.cpython-39.pyc          
+│  │  ├─ dm.proto                          
+│  │  └─ dm_pb2.py                         
+│  ├─ __pycache__                          
+│  │  ├─ bilibiliComments.cpython-39.pyc   
+│  │  ├─ bilibiliDMhistory.cpython-39.pyc  
+│  │  ├─ bilibiliUser.cpython-39.pyc       
+│  │  └─ bilibiliVideo.cpython-39.pyc      
+│  ├─ bilibiliComments.py                   //评论
+│  ├─ bilibiliDMhistory.py                  //历史弹幕
+│  ├─ bilibiliDMshishi.py                   //实时弹幕
+│  ├─ bilibiliDMxml.py                      //xml弹幕
+│  ├─ bilibiliUser.py                       //用户
+│  ├─ bilibiliVideo.py                      //视频
+│  └─ main.py                              
+├─ tests                                   
+│  ├─ loading.py                           
+│  └─ test_spider.py                       
+├─ __pycache__                             
+├─ LICENSE                                 
+├─ README.md                               
+└─ requirements.txt                        
+
 ```
 
 ## 依赖项
