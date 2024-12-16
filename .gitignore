@@ -34,6 +34,7 @@
 *.log
 *.iml
 *.csv
+*.txt
 # OS generated files #
 .DS_Store
 .DS_Store?
