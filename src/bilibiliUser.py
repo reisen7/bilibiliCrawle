@@ -1,9 +1,10 @@
-'''
+"""
 Author: reisen
 Date: 2024-12-14 23:29:53
-LastEditTime: 2024-12-15 20:29:50
-'''
-import os,sys
+LastEditTime: 2024-12-16 19:58:56
+"""
+
+import os, sys
 import csv
 import datetime
 import json
@@ -28,18 +29,15 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 import random
 from configs.config import BilibiliHelper
+
 ua = UserAgent()
 
 img_key, sub_key = wbi.getWbiKeys()
 
 signed_params = wbi.encWbi(
-    params={
-        'foo': '114',
-        'bar': '514',
-        'baz': 1919810
-    },
+    params={"foo": "114", "bar": "514", "baz": 1919810},
     img_key=img_key,
-    sub_key=sub_key
+    sub_key=sub_key,
 )
 
 
@@ -76,9 +74,10 @@ signed_params = wbi.encWbi(
 # 将用户ID保存到名为user_ids.txt的文件中，每行一个。
 # 运行此脚本后，您将在名为output.xlsx的Excel文件中看到提取的数据。
 bv = BilibiliHelper.get_bv()
-file_path_1 = ('doc/user/用户_'+bv+'.csv')
+file_path_1 = "doc/user/用户_" + bv + ".csv"
 
 config.create_file_if_not_exists(file_path_1)
+
 
 def get_user_data(driver, user_id):
     user_url = f"https://space.bilibili.com/{user_id}/video"
@@ -90,17 +89,19 @@ def get_user_data(driver, user_id):
         try:
             xpath = f"//*[contains(text(), '{text}')]/parent::div"
             element = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
-            match = re.search(r'\d+(?:,\d+)*', element.get_attribute('title'))
+            match = re.search(r"\d+(?:,\d+)*", element.get_attribute("title"))
             return match.group()
         except TimeoutException:
-            return '-1'
+            return "-1"
 
     def get_attribute_value(selector, attribute):
         try:
-            element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
+            element = wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+            )
             return element.get_attribute(attribute)
         except TimeoutException:
-            return '-1'
+            return "-1"
 
     nickname = get_attribute_value("span#h-name", "innerText")
     description = get_attribute_value("h4.h-sign", "title")
@@ -112,35 +113,49 @@ def get_user_data(driver, user_id):
     read_count = get_attribute_value1("阅读数")
 
     return {
-        'nickname': nickname,
-        'description': description,
-        'following': int(str(following).replace(",", "")),
-        'fans': int(str(fans).replace(",", "")),
-        'likes': int(str(likes).replace(",", "")),
-        'views': int(str(views).replace(",", "")),
-        'read_count':int(str(read_count).replace(",", "")),
-        'videos': int(str(videos).replace(",", "")),
+        "nickname": nickname,
+        "description": description,
+        "following": int(str(following).replace(",", "")),
+        "fans": int(str(fans).replace(",", "")),
+        "likes": int(str(likes).replace(",", "")),
+        "views": int(str(views).replace(",", "")),
+        "read_count": int(str(read_count).replace(",", "")),
+        "videos": int(str(videos).replace(",", "")),
     }
+
 
 def main():
     num_count = 0
     # 从 txt 文件读取用户ID
-    with open('doc/user/user_ids.txt', 'r',encoding='utf-8-sig', errors='replace') as f:
+    with open(
+        "doc/user/user_ids.txt", "r", encoding="utf-8-sig", errors="replace"
+    ) as f:
         user_ids = [line.strip() for line in f.readlines()]
-    
+
     # print(user_ids)
-    
-    
+
     # 检查 output.xlsx 是否存在，创建或加载工作表
-    with open(file_path_1, mode='a', newline='') as file:
+    with open(file_path_1, mode="a", newline="", encoding="utf-8-sig") as file:
         writer = csv.writer(file)
-        writer.writerow(['ID', '昵称', '个人简介', '关注数', '粉丝数', '获赞数', '播放数', '阅读数', '视频投稿数'])
+        writer.writerow(
+            [
+                "ID",
+                "昵称",
+                "个人简介",
+                "关注数",
+                "粉丝数",
+                "获赞数",
+                "播放数",
+                "阅读数",
+                "视频投稿数",
+            ]
+        )
 
     # 启动浏览器
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service)
     url = "https://space.bilibili.com"
-    
+
     driver.get(url)
     time.sleep(20)
     # 遍历用户ID并获取数据
@@ -151,9 +166,9 @@ def main():
         print(f"第{num_count}个用户已完成爬取，UID为{user_id}")
 
         # 保存数据到 Excel 文件
-        with open(file_path_1, mode='a', newline='', encoding='utf-8-sig') as file:
-           writer = csv.writer(file)
-           writer.writerow(row_data)
+        with open(file_path_1, mode="a", newline="", encoding="utf-8-sig") as file:
+            writer = csv.writer(file)
+            writer.writerow(row_data)
 
         # 添加随机延时
         sleep_time = random.uniform(3, 5)  # 随机生成5到10秒之间的延时
@@ -162,7 +177,10 @@ def main():
     # 关闭浏览器
     driver.quit()
 
-    print("爬取完成。说明：输出结果中-1代表缺省，如果表格里看到了-1，即为该单元格的值没爬成功，这可能由于访问过于频繁造成，可以调大93行延时时间重试")
+    print(
+        "爬取完成。说明：输出结果中-1代表缺省，如果表格里看到了-1，即为该单元格的值没爬成功，这可能由于访问过于频繁造成，可以调大93行延时时间重试"
+    )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
