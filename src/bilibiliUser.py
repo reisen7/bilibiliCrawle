@@ -4,6 +4,8 @@ Date: 2024-12-14 23:29:53
 LastEditTime: 2024-12-16 19:58:56
 """
 
+import gzip
+import io
 import os, sys
 import csv
 import datetime
@@ -12,20 +14,18 @@ from multiprocessing.pool import ThreadPool
 import random
 import sys
 import time
+from exceptiongroup import catch
 import requests
 import configs.biliwbi as wbi
 import configs.config as config
 from fake_useragent import UserAgent
 import os
 import re
-from openpyxl import Workbook, load_workbook
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from seleniumwire import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.common.exceptions import TimeoutException
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+from openpyxl import Workbook, load_workbook
+from selenium.webdriver.support import expected_conditions as EC
 import time
 import random
 from configs.config import BilibiliHelper
@@ -73,54 +73,122 @@ signed_params = wbi.encWbi(
 
 # 将用户ID保存到名为user_ids.txt的文件中，每行一个。
 # 运行此脚本后，您将在名为output.xlsx的Excel文件中看到提取的数据。
+
 bv = BilibiliHelper.get_bv()
+
+
 file_path_1 = "doc/user/用户_" + bv + ".csv"
 
 config.create_file_if_not_exists(file_path_1)
 
 
 def get_user_data(driver, user_id):
-    user_url = f"https://space.bilibili.com/{user_id}/video"
+    user_url = f"https://space.bilibili.com/{user_id}"
     driver.get(user_url)
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(5)
+    last_request = ""
+    response = ""
+    json_data = {}
+    for request in driver.requests:
+        if "info?mid=" in request.url and request.response:
+            # 更新last_request为当前请求
+            last_request = request
+            Content_Encoding = request.response.headers["Content-Encoding"]
+            if Content_Encoding == "gzip":
+                body = gzip.decompress(request.response.body)
+                json_data = json.loads(body.decode("utf - 8"))
+    card_url = f"https://api.bilibili.com/x/web-interface/card?mid={user_id}"
+    resp_card = requests.get(
+        card_url,
+        headers=BilibiliHelper.get_headers(),
+    )
+    print("获取用户数据成功")
+    data = json_data["data"]
+    nickname = data["name"]
+    sex = data["sex"]
+    sign = data["sign"]
+    level = data["level"]
+    medal_level = ""
+    medal_name = ""
+    if data["fans_medal"]["medal"] == "true":
+        medal_level = data["fans_medal"]["medal"]["level"]
+        medal_name = data["fans_medal"]["medal"]["medal_name"]
+    nameplate_name = data["nameplate"]["name"]
+    nameplate_level = data["nameplate"]["level"]
+    school = ""
+    if data["school"]:
+        school = data["school"]["name"]
 
-    wait = WebDriverWait(driver, 3)
+    is_senior_member = data["is_senior_member"]
+    vipStatus = data["vip"]["status"]
+    vip = ""
+    if vipStatus == "0":
+        vip = ""
+    else:
+        vip = data["vip"]["label"]["text"]
+    # print(resp_card.text)
+    data1 = resp_card.json()
+    # print(data1)
+    like = data1["data"]["like_num"]
+    data1 = data1["data"]["card"]
+    # print(data1)
+    fans = data1["fans"]
+    attention = data1["attention"]
 
-    def get_attribute_value1(text):
-        try:
-            xpath = f"//*[contains(text(), '{text}')]/parent::div"
-            element = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
-            match = re.search(r"\d+(?:,\d+)*", element.get_attribute("title"))
-            return match.group()
-        except TimeoutException:
-            return "-1"
+    Official_type = ""
+    if data1["Official"]["type"] == "-1":
+        Official_type = ""
+    if data1["Official"]["type"] == "0":
+        Official_type = "个人认证"
+    if data1["Official"]["type"] == "1":
+        Official_type = "机构认证"
+    Official_desc = data1["Official"]["desc"]
 
-    def get_attribute_value(selector, attribute):
-        try:
-            element = wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, selector))
-            )
-            return element.get_attribute(attribute)
-        except TimeoutException:
-            return "-1"
+    # def get_attribute_value1(text):
+    #     try:
+    #         xpath = f"//*[contains(text(), '{text}')]/parent::div"
+    #         element = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
+    #         match = re.search(r"\d+(?:,\d+)*", element.get_attribute("title"))
+    #         return match.group()
+    #     except TimeoutException:
+    #         return "-1"
 
-    nickname = get_attribute_value("span#h-name", "innerText")
-    description = get_attribute_value("h4.h-sign", "title")
-    following = get_attribute_value(".n-data.n-gz", "title")
-    fans = get_attribute_value(".n-data.n-fs", "title")
-    likes = get_attribute_value1("获赞数")
-    views = get_attribute_value1("播放数")
-    videos = get_attribute_value("li.contribution-item.cur span.num", "innerText")
-    read_count = get_attribute_value1("阅读数")
+    # def get_attribute_value(selector, attribute):
+    #     try:
+    #         element = wait.until(
+    #             EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+    #         )
+    #         return element.get_attribute(attribute)
+    #     except TimeoutException:
+    #         return "-1"
+
+    # nickname = get_attribute_value("span#h-name", "innerText")
+    # description = get_attribute_value("h4.h-sign", "title")
+    # following = get_attribute_value(".n-data.n-gz", "title")
+    # fans = get_attribute_value(".n-data.n-fs", "title")
+    # likes = get_attribute_value1("获赞数")
+    # views = get_attribute_value1("播放数")
+    # videos = get_attribute_value("li.contribution-item.cur span.num", "innerText")
+    # read_count = get_attribute_value1("阅读数")
 
     return {
         "nickname": nickname,
-        "description": description,
-        "following": int(str(following).replace(",", "")),
-        "fans": int(str(fans).replace(",", "")),
-        "likes": int(str(likes).replace(",", "")),
-        "views": int(str(views).replace(",", "")),
-        "read_count": int(str(read_count).replace(",", "")),
-        "videos": int(str(videos).replace(",", "")),
+        "sex": sex,
+        "sign": sign,
+        "level": level,
+        "medal_name": medal_name,
+        "medal_level": medal_level,
+        "nameplate_name": nameplate_name,
+        "nameplate_level": nameplate_level,
+        "school": school,
+        "is_senior_member": is_senior_member,
+        "vip": vip,
+        "fans": fans,
+        "attention": attention,
+        "like": like,
+        "Official_type": Official_type,
+        "Official_desc": Official_desc,
     }
 
 
@@ -141,23 +209,39 @@ def main():
             [
                 "ID",
                 "昵称",
+                "性别",
                 "个人简介",
-                "关注数",
+                "等级",
+                "粉丝牌名称",
+                "粉丝牌等级",
+                "勋章名称",
+                "勋章等级",
+                "学校",
+                "是否为硬核大会员",
+                "会员",
                 "粉丝数",
-                "获赞数",
-                "播放数",
-                "阅读数",
-                "视频投稿数",
+                "关注数",
+                "点赞数",
+                "认证信息",
+                "认证信息详情",
             ]
         )
 
     # 启动浏览器
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
+    options = {
+        "ignore_http_methods": [
+            "GET",
+            "POST",
+        ],  # 提取XHR请求，通常为GET或POST。如果你不希望忽略任何方法，可以忽略此选项或设置为空数组
+        "custom_headers": {"X-Requested-With": "XMLHttpRequest"},  # 筛选XHR请求
+    }
+    chrome_options = Options()
+    chrome_service = Service("../chromedriver-win64\\chromedriver.exe")
+    driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
     url = "https://space.bilibili.com"
 
     driver.get(url)
-    time.sleep(20)
+    time.sleep(15)
     # 遍历用户ID并获取数据
     for user_id in user_ids[num_count:]:
         user_data = get_user_data(driver, user_id)

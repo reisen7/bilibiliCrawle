@@ -5,6 +5,7 @@
 /.vscode/
 /bin/
 /.conda/
+/__pycache__/
 .classpath
 .project
 .settings
