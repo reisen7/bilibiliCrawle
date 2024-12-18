@@ -145,33 +145,6 @@ def get_user_data(driver, user_id):
         Official_type = "机构认证"
     Official_desc = data1["Official"]["desc"]
 
-    # def get_attribute_value1(text):
-    #     try:
-    #         xpath = f"//*[contains(text(), '{text}')]/parent::div"
-    #         element = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
-    #         match = re.search(r"\d+(?:,\d+)*", element.get_attribute("title"))
-    #         return match.group()
-    #     except TimeoutException:
-    #         return "-1"
-
-    # def get_attribute_value(selector, attribute):
-    #     try:
-    #         element = wait.until(
-    #             EC.presence_of_element_located((By.CSS_SELECTOR, selector))
-    #         )
-    #         return element.get_attribute(attribute)
-    #     except TimeoutException:
-    #         return "-1"
-
-    # nickname = get_attribute_value("span#h-name", "innerText")
-    # description = get_attribute_value("h4.h-sign", "title")
-    # following = get_attribute_value(".n-data.n-gz", "title")
-    # fans = get_attribute_value(".n-data.n-fs", "title")
-    # likes = get_attribute_value1("获赞数")
-    # views = get_attribute_value1("播放数")
-    # videos = get_attribute_value("li.contribution-item.cur span.num", "innerText")
-    # read_count = get_attribute_value1("阅读数")
-
     return {
         "nickname": nickname,
         "sex": sex,
