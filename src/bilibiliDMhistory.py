@@ -80,7 +80,6 @@ for monthDay in monthDays:
         "type": 1,  # 弹幕类型
         "oid": cid,  # cid
         "date": monthDay,  # 弹幕日期
-        "segment_index": 2,
     }
     resp = requests.get(history_dm_url, params, headers=BilibiliHelper.get_headers())
     data = resp.content
@@ -88,15 +87,17 @@ for monthDay in monthDays:
     danmaku_seg = Danmaku.DmSegMobileReply()  # type: ignore
     danmaku_seg.ParseFromString(data)
     # print(text_format.MessageToString(danmaku_seg.elems[0], as_utf8=True))
-    # print("完成"+monthDay+"的数据爬取")
+
+    # print("完成" + monthDay + "的数据爬取")
     j += 1
     progress_percent = int(j / num1 * 100)
     filled_length = int(bar_length * (progress_percent / 100))
     num = len(danmaku_seg.elems)  # 设置倒计时时间
+    print(num)
     i = 0
-    for elems in danmaku_seg.elems:
+    for index in range(num):
         dm = (
-            text_format.MessageToString(elems, as_utf8=True)
+            text_format.MessageToString(danmaku_seg.elems[index], as_utf8=True)
             .replace('"', "")
             .split("\n")
         )
@@ -113,6 +114,7 @@ for monthDay in monthDays:
         dt_object = datetime.datetime.fromtimestamp(
             int(json_obj["ctime"]), datetime.timezone.utc
         )
+        # print(json_obj)
         formatted_time = dt_object.strftime("%Y-%m-%d %H:%M:%S")
         id = json_obj["id"]
         progress = json_obj.get("progress", None)
@@ -123,9 +125,12 @@ for monthDay in monthDays:
         content = json_obj["content"]
         ctime = formatted_time
         idStr = json_obj["idStr"]
-        attr = json_obj["attr"]
+        attr = ""
+        if "attr" in json_obj:
+            attr = json_obj["attr"]
+
         # for i in range(0, int(num/timeflush)+1):
-        i += 1
+        # i += 1
         if i % timeflush == 0 or i == num:
             progress_percent1 = int(i / num * 100)
             filled_length1 = int(bar_length * (progress_percent1 / 100))
@@ -152,6 +157,10 @@ for monthDay in monthDays:
         dms.append(
             [id, progress, mode, fontsize, color, midHash, content, ctime, idStr, attr]
         )
+        # print(index)
+        # print(
+        #     [id, progress, mode, fontsize, color, midHash, content, ctime, idStr, attr]
+        # )
         # print(int(dma_lie[7]))
         # print(dma_lie)
         # dt_object = datetime.datetime.fromtimestamp(int(dma_lie[7]), datetime.timezone.utc)

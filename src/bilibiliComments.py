@@ -408,7 +408,7 @@ with requests.Session() as session:
                                                 ]
                                                 vip = ""
                                                 if vipStatus == "0":
-                                                    vip = "无"
+                                                    vip = ""
                                                 else:
                                                     vip = comment["member"]["vip"][
                                                         "label"
@@ -429,7 +429,7 @@ with requests.Session() as session:
                                                     )
                                                     == "-1"
                                                 ):
-                                                    is_officaial = "无"
+                                                    is_officaial = ""
                                                 elif (
                                                     str(
                                                         comment["member"][

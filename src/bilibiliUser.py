@@ -137,13 +137,13 @@ def get_user_data(driver, user_id):
     attention = data1["attention"]
 
     Official_type = ""
-    if data1["Official"]["type"] == "-1":
+    if data["official"]["type"] == -1:
         Official_type = ""
-    if data1["Official"]["type"] == "0":
+    elif data["official"]["type"] == 0:
         Official_type = "个人认证"
-    if data1["Official"]["type"] == "1":
+    elif data["official"]["type"] == 1:
         Official_type = "机构认证"
-    Official_desc = data1["Official"]["desc"]
+    Official_desc = data["official"]["title"]
 
     return {
         "nickname": nickname,

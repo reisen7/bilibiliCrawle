@@ -8,8 +8,8 @@ from fake_useragent import UserAgent
 
 class BilibiliHelper:
     # 类属性，相当于静态变量
-    _cookie = "buvid4=4F41C8A4-A89C-5E80-B2AB-8C222E6A8C0160292-023081809-k0zyHiuRDURA%2F%2Bu6uUGBn9ZJh%2BUZroYQRlqvXttbKIFoVgjlvvDstw%3D%3D; buvid_fp_plain=undefined; header_theme_version=CLOSE; enable_web_push=DISABLE; DedeUserID=14211643; DedeUserID__ckMd5=896bac34e98270e4; LIVE_BUVID=AUTO7217028158647895; FEED_LIVE_VERSION=V8; buvid3=EBCD19BB-5F43-FA27-9E08-E7841D11831F72726infoc; b_nut=1723861672; _uuid=1B2A10745-10D82-3D25-B7E8-710B373AF513573813infoc; rpdid=0zbfvZWQjU|16Z4lxZ7a|2E|3w1SVjVJ; CURRENT_QUALITY=0; hit-dyn-v2=1; dy_spec_agreed=1; PVID=1; home_feed_column=5; browser_resolution=1528-738; SESSDATA=7cf0a90d%2C1749738645%2C22e42%2Ac1CjCB9RJzkAh9y62VJOA5hlPUbd3i4NL0whgZhSfccV8a-XPH0eGK-wXHgh0XKNV-C-ISVmhhQTBjSmxFVzc5ay0tajNwRE5CblItNFExUVpnRmpkRXo5dnZPbUxaU2xBYmlEVkk2ZlY4M0xTd0k0dFQyb25qcy0wbnRwd09tWU5nRnhPODQ2Wmt3IIEC; bili_jct=8319bc03969a1f1bb0dace6ba2824845; fingerprint=ab608923ba12e0161c35f30096c6d1c1; buvid_fp=ab608923ba12e0161c35f30096c6d1c1; bp_t_offset_14211643=1011045506320695296; b_lsid=A24210B27_193D4C3D156; bili_ticket=eyJhbGciOiJIUzI1NiIsImtpZCI6InMwMyIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzQ3MDA2MjQsImlhdCI6MTczNDQ0MTM2NCwicGx0IjotMX0.yXq7edwOq7Bewt2R2BAxu_8rUKDGZIOkx0uBMXxPpNE; bili_ticket_expires=1734700564; CURRENT_FNVAL=2000; sid=gjnii2pd"
-    _bv = "BV13wzVYtEet"
+    _cookie = "buvid3=832DE693-6441-9543-41D5-5C547CE4658A76524infoc; b_nut=1735380076; _uuid=B9D103A310-6E101-CD10D-710DF-11C515393321076733infoc; buvid4=AAE105CB-5004-71D6-FF14-F5D5B3CEFF9078077-024122810-YVZn5QqHbRxEGySS90mT5v6Tjq3eg4V3wnWUwF%2FVVrHYq3XkAbxELigtG9KHcPZl; rpdid=0zbfVGNbwB|EEC5QZYy|4jA|3w1TrtDh; SESSDATA=04d9afb8%2C1750932136%2C611c5%2Ac1CjAurrPGcB8uPrgVdty5IxphrLLL7Ae5c0bJ5eozwrXDbyLx4nsSQWKrAuFZtP4ehjoSVmZQNm92TWhpdDlpQmJiUnRuY1Z3MHNMVkpWcHBVLTh2TlJmN1ZwRWFJTXI0SGtaOXl6djRrUlp5Tmx2U0w2eUtjR0J5bjVBcl8yb0lTOG01VlIzb01RIIEC; bili_jct=993587aff370170f983cca88069b7939; DedeUserID=14211643; DedeUserID__ckMd5=896bac34e98270e4; header_theme_version=CLOSE; enable_web_push=DISABLE; hit-dyn-v2=1; dy_spec_agreed=1; buvid_fp_plain=undefined; LIVE_BUVID=AUTO7517365933379533; PVID=1; blackside_state=0; CURRENT_BLACKGAP=0; CURRENT_QUALITY=80; enable_feed_channel=ENABLE; home_feed_column=4; bp_t_offset_14211643=1052083420617768960; browser_resolution=1009-715; fingerprint=250a979f707317e90d29b641fcd5a41d; buvid_fp=1b2028bbe56ceee11069e19d9286b576; __at_once=12805230630066019579; __at_sign=e5f6f2706257a7d2aa6284c7b8f40f07; bili_ticket=eyJhbGciOiJIUzI1NiIsImtpZCI6InMwMyIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQ2MjEwMzIsImlhdCI6MTc0NDM2MTc3MiwicGx0IjotMX0.Iy2llKcQM1e1SOnGi2RlNeBaxex8zMEEmH_E27cr_ro; bili_ticket_expires=1744620972; b_lsid=722210AC4_1962411434D; CURRENT_FNVAL=4048; sid=8scsf889"
+    _bv = "BV1MJ4m1u7RH"
 
     @classmethod
     def get_cookie(cls) -> str:
@@ -36,8 +36,9 @@ class BilibiliHelper:
             f"https://www.bilibili.com/video/{BilibiliHelper._bv}",
             headers=cls.get_headers(),
         )
-        obj = re.compile(r'"aid":(?P<id>\d+),"bvid":"{}"'.format(BilibiliHelper._bv))
-        print(cls.get_headers())
+        # print(resp.text)
+        obj = re.compile(r'<div id="(?P<id>\d+)" bvid="{}"'.format(BilibiliHelper._bv))
+        # print(cls.get_headers())
         match = obj.search(resp.text)
         if match:
             oid = match.group("id")
@@ -132,4 +133,4 @@ def datetime_to_timestamp_in_milliseconds(cls):
 
 if __name__ == "__main__":
     helper = BilibiliHelper()
-    print(helper)
+    print(helper.get_oid())
