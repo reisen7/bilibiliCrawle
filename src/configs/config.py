@@ -1,3 +1,15 @@
+"""
+Author: reisen7 (reisen7@foxmail.com)
+-----
+Date: Friday, 11th April 2025 6:00:52 pm
+-------------------------------------
+
+-------------------------------------
+HISTORY:
+Date      	By  	Comments
+----------	------	------------------
+"""
+
 import os
 import re
 import time
@@ -38,8 +50,11 @@ class BilibiliHelper:
         )
         # print(resp.text)
         obj = re.compile(r'<div id="(?P<id>\d+)" bvid="{}"'.format(BilibiliHelper._bv))
+        obj1 = re.compile(r'"aid":(?P<id>\d+),"bvid":"{}"'.format(BilibiliHelper._bv))
         # print(cls.get_headers())
         match = obj.search(resp.text)
+        if not match:
+            match = obj1.search(resp.text)
         if match:
             oid = match.group("id")
             return oid
