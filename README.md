@@ -3,12 +3,12 @@
 
 ## 项目简介
 
-这个项目是一个爬虫应用，旨在从B站提取弹幕数据，评论数据。通过使用Python编程语言及其相关库（如 `requests`, `BeautifulSoup`, `Scrapy` 等），我们能够实现高效、可靠的数据抓取和处理。
+一个爬虫应用，旨在从B站提取弹幕数据，评论数据
 
 参考项目如下：
-- [哔哩哔哩-API收集整理](https://github.com/SocialSisterYi/bilibili-API-collect)：这是一个功能很强大的集合项目，我们的主要接口参考了它的思路。
-- [Bilibili/B站视频/动态评论爬虫](https://blog.csdn.net/weixin_51869009/article/details/139638650)：我们参考其中的爬虫思路。
-- 
+- [哔哩哔哩-API收集整理](https://github.com/SocialSisterYi/bilibili-API-collect)：主要接口参考了它的思路。
+- [Bilibili/B站视频/动态评论爬虫](https://blog.csdn.net/weixin_51869009/article/details/139638650)：参考其中的爬虫思路。
+
 ## 项目结构
 
 ```
