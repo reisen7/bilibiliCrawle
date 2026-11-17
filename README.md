@@ -1,0 +1,135 @@
+
+# BILIBILI爬虫项目 哔哩哔哩
+
+## 项目简介
+
+一个爬虫应用，旨在从B站提取弹幕数据，评论数据
+
+参考项目如下：
+- [哔哩哔哩-API收集整理](https://github.com/SocialSisterYi/bilibili-API-collect)：主要接口参考了它的思路。
+- [Bilibili/B站视频/动态评论爬虫](https://blog.csdn.net/weixin_51869009/article/details/139638650)：参考其中的爬虫思路。
+
+## 项目结构
+
+```
+bilibili                                   
+├─ chromedriver-win64                       //浏览器驱动
+│  ├─ chromedriver.exe                     
+│  ├─ LICENSE.chromedriver                 
+│  └─ THIRD_PARTY_NOTICES.chromedriver     
+├─ chromedriver_win32                      
+│  ├─ chromedriver.exe                     
+│  └─ LICENSE.chromedriver                 
+├─ src                                     
+│  ├─ configs                               //配置
+│  │  ├─ __pycache__                       
+│  │  │  ├─ biliwbi.cpython-39.pyc         
+│  │  │  └─ config.cpython-39.pyc          
+│  │  ├─ biliwbi.py                        
+│  │  └─ config.py                         
+│  ├─ doc                                   //文件
+│  │  ├─ comments                          
+│  │  │  ├─ 评论_BV1jNmtYcEbY.csv            
+│  │  │  └─ 评论_BV1TsmtY7Egu.csv            
+│  │  ├─ dm                                
+│  │  │  ├─ 历史弹幕_BV14UUAYmExC.csv          
+│  │  │  ├─ 历史弹幕_BV1jNmtYcEbY.csv          
+│  │  │  └─ 历史弹幕_BV1TsmtY7Egu.csv          
+│  │  ├─ user                              
+│  │  │  ├─ user_ids.txt                   
+│  │  │  ├─ 用户.csv                         
+│  │  │  └─ 用户_BV1jNmtYcEbY.csv            
+│  │  └─ video                             
+│  │     ├─ 视频信息_BV1jNmtYcEbY.csv          
+│  │     └─ 视频信息_BV1TsmtY7Egu.csv          
+│  ├─ proto                                 //弹幕转译
+│  │  ├─ __pycache__                       
+│  │  │  └─ dm_pb2.cpython-39.pyc          
+│  │  ├─ dm.proto                          
+│  │  └─ dm_pb2.py                         
+│  ├─ __pycache__                          
+│  │  ├─ bilibiliComments.cpython-39.pyc   
+│  │  ├─ bilibiliDMhistory.cpython-39.pyc  
+│  │  ├─ bilibiliUser.cpython-39.pyc       
+│  │  └─ bilibiliVideo.cpython-39.pyc      
+│  ├─ bilibiliComments.py                   //评论
+│  ├─ bilibiliDMhistory.py                  //历史弹幕
+│  ├─ bilibiliDMshishi.py                   //实时弹幕
+│  ├─ bilibiliDMxml.py                      //xml弹幕
+│  ├─ bilibiliUser.py                       //用户
+│  ├─ bilibiliVideo.py                      //视频
+│  └─ main.py                              
+├─ tests                                   
+│  ├─ loading.py                           
+│  └─ test_spider.py                       
+├─ __pycache__                             
+├─ LICENSE                                 
+├─ README.md                               
+└─ requirements.txt                        
+
+```
+
+## 依赖项
+
+确保你已经安装了以下Python库。你可以使用 `pip` 来安装这些依赖项：
+
+```bash
+pip install -r requirements.txt
+```
+
+`requirements.txt` 示例：
+
+```
+requests~=2.32.3
+google~=3.0.0
+pytz~=2024.2
+selenium~=4.27.1
+urllib3~=2.2.3
+```
+
+## 运行指南
+
+1. **安装依赖**：确保你已经安装了所有依赖项。
+2. **配置**：如有需要，请根据项目需求修改配置文件或环境变量。
+3. **运行爬虫**：在命令行中运行以下命令启动爬虫：
+
+    ```bash
+    python src/main.py
+    ```
+
+4. **测试**：运行测试代码以确保一切正常运行：
+
+    ```bash
+    pytest tests/
+    ```
+
+## 数据处理
+
+抓取的数据将被存储在 `doc/` 目录下
+
+## 注意事项
+
+1. **合规性**：确保爬虫行为符合目标网站的规则和相关法律法规。
+2. **异常处理**：合理处理网络请求异常和解析异常，提高代码的健壮性。
+3. **性能优化**：针对大规模数据抓取，考虑使用异步请求和多线程/多进程技术。
+
+## 贡献指南
+
+如果你有兴趣为该项目做出贡献，请遵循以下步骤：
+
+1. Fork 本仓库。
+2. 创建并切换到新的开发分支。
+3. 编写代码或修复Bug。
+4. 提交更改并推送到你的分支。
+5. 提交Pull Request。
+
+## 联系我们
+
+如果你有任何问题或建议，可以通过以下方式联系我们：
+
+- 项目主页： [项目主页链接](https://gitee.com/reisen7/bilibili-crawler)
+- Git Issues： [Issues](https://gitee.com/reisen7/bilibili-crawler/issues)
+- 电子邮件： [邮箱](mailto:reisen7@foxmail.com)
+
+---
+

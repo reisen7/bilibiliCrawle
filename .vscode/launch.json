@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "LaunchPath",
+            "type": "python",
+            "request": "launch",
+            "cwd":"${fileDirname}",
+            "program": "${file}",
+            "console": "integratedTerminal",
+        }
+    ]
+}
